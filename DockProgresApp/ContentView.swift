@@ -15,12 +15,13 @@ struct ContentView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 25) {
             Toggle("Show Progress", isOn: $viewModel.isVisible)
+                .font(.title)
             
             Group {
                 Picker("Progress Style", selection: $viewModel.progressStyle) {
                     ForEach(ProgressStyle.allCases, id: \.self) {
                         Text($0.rawValue)
-                            .font(.headline)
+                            .font(.title3)
                     }
                 }
                 .pickerStyle(.radioGroup)
@@ -31,10 +32,7 @@ struct ContentView: View {
                     supportsOpacity: false
                 )
             }
-            .opacity(viewModel.opacity)
-            .disabled(viewModel.isVisible == false)
-            
-            
+            .font(.title)
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity, alignment: .leading)
