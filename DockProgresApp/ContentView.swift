@@ -8,17 +8,54 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var viewModel = ContentViewModel()
+    
+    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(alignment: .leading, spacing: 25) {
+            Toggle("Show Progress", isOn: $viewModel.isVisible)
+            
+            Group {
+                Picker("Progress Style", selection: $viewModel.progressStyle) {
+                    ForEach(ProgressStyle.allCases, id: \.self) {
+                        Text($0.rawValue)
+                            .font(.headline)
+                    }
+                }
+                .pickerStyle(.radioGroup)
+                
+                ColorPicker(
+                    "Color of progress",
+                    selection: $viewModel.tint,
+                    supportsOpacity: false
+                )
+            }
+            .opacity(viewModel.opacity)
+            .disabled(viewModel.isVisible == false)
+            
+            
         }
-        .padding()
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .onReceive(timer) { t in
+            if viewModel.isVisible == false {
+                return
+            }
+            
+            if viewModel.progress >= 1.0 {
+                viewModel.isVisible = false
+                viewModel.progress = .zero
+            } else {
+                let range: Range<CGFloat> = (0.004..<0.008)
+                viewModel.progress += CGFloat.random(in: range)
+            }
+        }
     }
 }
 
-#Preview {
-    ContentView()
-}
+
+//#Preview {
+//    ContentView()
+//        .frame(width: 500, height: 420)
+//}
