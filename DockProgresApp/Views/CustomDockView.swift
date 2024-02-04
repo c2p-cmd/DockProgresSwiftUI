@@ -24,9 +24,8 @@ struct CustomDockView: View {
             Image(nsImage: logo)
                 .scaledToFit()
             
-            GeometryReader { proxy in
-                let width = proxy.size.width
-                let height = proxy.size.height
+            GeometryReader {
+                let width = $0.size.width
                 
                 // Limits progress between 0 & 1
                 let cappedProgress = max(min(progress, 1), 0)
